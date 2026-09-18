@@ -1,0 +1,22 @@
+name : Smart Triggers
+
+on:
+ push:
+   branches:
+      - main
+       - realease/*'
+       paths:
+          - 'src/**'
+          - 'app/**'
+          paths-ignore:
+           - '*.md'
+           -  docs/**'
+
+jobs:
+   build:
+     runs-on: ubuntu-latest
+     steps:
+       - name: Run on code changes only
+         run: echo "Code changes detected in src / or app / on main or release branches."          
+
+       
