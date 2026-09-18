@@ -1,0 +1,93 @@
+name : PR validation code
+
+on: 
+  pull_ request:
+    branches
+     -  main
+
+jobs:
+  file-size-check:
+    runs-on: ubuntu-latest
+    steps:
+       - name : Checkout code
+         uses: actions /checkout@v4
+         with:
+           fetch-depth: 0
+
+       - name: Check file sizes (< 1 mb)
+         run:|
+            echo "Checking for files larger than 1 MB ..."
+            [6:44 pm, 18/09/2026] Bhumi Kothari: - name: Check File Sizes (< 1 MB)
+        run: |
+          echo "Checking for files larger than 1MB..."
+          find . -type f -not -path '/.' -size +1M | while read file; do
+            echo "Error: File $file exceeds 1 MB limit!"
+            exit 1
+          done
+
+  branch-name-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Branch Name
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          echo "Branch name: $BRANCH_NAME"
+          if [[ ! "$BRANCH_NAME" =~ ^(feature|fix|docs)/ ]]; then
+            echo "Error: Branch name '$BRANCH_NAME' does not follow the required pattern (feature/, fix/, or docs/*)."
+            exit 1
+          else
+            echo "Branch name is valid!"
+          fi
+
+  pr-body-check:
+    runs-o…
+[6:47 pm, 18/09/2026] Bhumi Kothari: name: PR Validation Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  file-size-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check File Sizes (< 1 MB)
+        run: |
+          echo "Checking for files larger than 1MB..."
+          find . -type f -not -path '/.' -size +1M | while read file; do
+            echo "Error: File $file exceeds 1 MB limit!"
+            exit 1
+          done
+
+  branch-name-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Branch Name
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          echo "Branch name: $BRANCH_NAME"
+          if [[ ! "$BRANCH_NAME" =~ ^(feature|fix|docs)/ ]]; then
+            echo "Error: Branch name '$BRANCH_NAME' does not follow the required pattern (feature/, fix/, or docs/*)."
+            exit 1
+          else
+            echo "Branch name is valid!"
+          fi
+
+  pr-body-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR Description
+        run: |
+          BODY="${{ github.event.pull_request.body }}"
+          if [ -z "$BODY" ]; then
+            echo "⚠️ Warning: The PR description is empty. Please add a summary of your changes."
+          else
+            echo "PR description looks good."
+          fi 
+
